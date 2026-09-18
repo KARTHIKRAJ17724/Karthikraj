@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karthikraj S — Data Engineer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F6F7F5;
+    --surface: #FFFFFF;
+    --surface-2: #EFF1EE;
+    --border: #DFE3DE;
+    --ink: #1E2A26;
+    --muted: #5B675F;
+    --accent: #2B6E63;
+    --accent-2: #C98A3B;
+    --line: #D6DAD3;
+    --serif: 'Fraunces', Georgia, serif;
+    --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+  :root:not([data-theme="light"]) { }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #171C1A;
+      --surface: #1F2622;
+      --surface-2: #262E29;
+      --border: #333C36;
+      --ink: #EDEFEC;
+      --muted: #9AA69E;
+      --line: #333C36;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #171C1A;
+    --surface: #1F2622;
+    --surface-2: #262E29;
+    --border: #333C36;
+    --ink: #EDEFEC;
+    --muted: #9AA69E;
+    --line: #333C36;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    line-height:1.5;
+  }
+  ::selection{ background:var(--accent); color:#fff; }
+  a{ color:var(--accent); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+  button{ font-family:var(--sans); cursor:pointer; }
+  input, select, textarea{
+    font-family:var(--sans);
+    background:var(--surface);
+    border:1px solid var(--border);
+    color:var(--ink);
+    border-radius:5px;
+    padding:9px 11px;
+    font-size:14px;
+  }
+  input:focus, select:focus, textarea:focus, button:focus-visible, a:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+  }
+
+  /* ---------- Header ---------- */
+  header.site{
+    position:sticky; top:0; z-index:5;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .header-inner{
+    max-width:900px; margin:0 auto;
+    padding:16px clamp(16px,4vw,32px);
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+  }
+  .brand-mark{
+    font-family:var(--serif); font-size:19px; font-weight:600; color:var(--ink);
+  }
+  nav.tabs{ display:flex; gap:4px; background:var(--surface-2); border-radius:8px; padding:4px; }
+  nav.tabs button{
+    background:none; border:none; padding:7px 16px; border-radius:6px;
+    font-size:13.5px; color:var(--muted); font-weight:500;
+  }
+  nav.tabs button.active{ background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,0.06); }
+
+  /* ---------- Layout ---------- */
+  main{ max-width:900px; margin:0 auto; padding:0 clamp(16px,4vw,32px) 80px; }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* ---------- Hero ---------- */
+  .hero{ padding:56px 0 40px; border-bottom:1px solid var(--border); }
+  .hero .eyebrow{ font-size:14px; color:var(--accent); font-weight:600; margin-bottom:10px; }
+  .hero h1{
+    font-family:var(--serif); font-weight:500;
+    font-size:clamp(36px,6vw,54px); line-height:1.08; margin:0 0 6px; color:var(--ink);
+  }
+  .hero .role{ font-size:17px; color:var(--muted); margin-bottom:20px; }
+  .hero .bio{ font-size:16.5px; line-height:1.7; color:var(--ink); max-width:62ch; margin:0 0 22px; }
+  .contact-row{ display:flex; flex-wrap:wrap; gap:18px; font-size:14px; }
+  .contact-row a, .contact-row span{ color:var(--muted); }
+  .contact-row a:hover{ color:var(--accent); }
+  .hero-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .edit-link{
+    background:none; border:1px solid var(--border); color:var(--muted);
+    font-size:12.5px; padding:6px 12px; border-radius:6px; white-space:nowrap;
+  }
+  .edit-link:hover{ color:var(--ink); border-color:var(--muted); }
+
+  /* ---------- Stat strip ---------- */
+  .stat-strip{
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
+    gap:0; margin:32px 0 0;
+    border-top:1px solid var(--border);
+  }
+  .stat-strip .stat{
+    padding:18px 4px 0; border-right:1px solid var(--border);
+  }
+  .stat-strip .stat:last-child{ border-right:none; }
+  .stat .n{ font-family:var(--mono); font-size:24px; font-weight:600; color:var(--ink); }
+  .stat .l{ font-size:12.5px; color:var(--muted); margin-top:2px; }
+
+  /* ---------- Section ---------- */
+  .section{ padding:44px 0; border-bottom:1px solid var(--border); }
+  .section:last-child{ border-bottom:none; }
+  .section-title{
+    font-family:var(--serif); font-size:22px; font-weight:500; color:var(--ink); margin:0 0 26px;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+
+  /* ---------- Timeline (experience) ---------- */
+  .timeline{ position:relative; padding-left:24px; }
+  .timeline::before{
+    content:""; position:absolute; left:5px; top:6px; bottom:6px; width:1px; background:var(--line);
+  }
+  .tl-item{ position:relative; margin-bottom:34px; }
+  .tl-item:last-child{ margin-bottom:0; }
+  .tl-item::before{
+    content:""; position:absolute; left:-24px; top:6px; width:9px; height:9px; border-radius:50%;
+    background:var(--accent); border:2px solid var(--bg);
+  }
+  .tl-item h3{ margin:0 0 3px; font-size:17px; font-weight:600; }
+  .tl-item .meta{ font-size:13px; color:var(--accent); font-weight:500; margin-bottom:10px; }
+  .tl-item ul{ margin:0; padding-left:18px; color:var(--muted); font-size:14.5px; line-height:1.7; }
+  .tl-item ul li{ margin-bottom:3px; }
+  .tl-item .card-actions{ margin-top:10px; }
+  .tl-item .card-actions button{
+    background:none; border:none; color:var(--muted); font-size:12.5px; padding:0; margin-right:14px;
+  }
+  .tl-item .card-actions button:hover{ color:var(--accent); }
+  .add-row{
+    background:none; border:1px dashed var(--border); color:var(--muted);
+    padding:10px 14px; border-radius:8px; font-size:13.5px; width:100%; text-align:left; margin-top:6px;
+  }
+  .add-row:hover{ border-color:var(--accent); color:var(--accent); }
+
+  /* ---------- Skills ---------- */
+  .skills-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:28px; }
+  .skill-group h4{
+    font-size:12.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted);
+    font-weight:600; margin:0 0 12px;
+  }
+  .skill-group ul{ list-style:none; margin:0; padding:0; }
+  .skill-group li{
+    padding:8px 0; border-bottom:1px solid var(--border); font-size:14.5px; color:var(--ink);
+    display:flex; align-items:center; gap:9px;
+  }
+  .skill-group li:last-child{ border-bottom:none; }
+  .skill-group li::before{ content:""; width:5px; height:5px; border-radius:50%; background:var(--accent-2); flex-shrink:0; }
+
+  /* ---------- Education / cards ---------- */
+  .edu-card{ margin-bottom:16px; }
+  .edu-card h3{ margin:0 0 3px; font-size:16.5px; font-weight:600; }
+  .edu-card .meta{ font-size:13.5px; color:var(--muted); }
+  .cert-list{ display:flex; flex-wrap:wrap; gap:10px; margin-top:18px; }
+  .cert-pill{
+    font-size:13px; padding:6px 13px; border-radius:20px;
+    background:var(--surface-2); border:1px solid var(--border); color:var(--ink);
+  }
+  .lang-row{ display:flex; gap:22px; font-size:15px; color:var(--ink); }
+
+  /* ---------- Empty state ---------- */
+  .empty{ border:1px dashed var(--border); border-radius:8px; padding:20px; color:var(--muted); font-size:14px; }
+  .empty strong{ color:var(--ink); }
+
+  /* ---------- Footer ---------- */
+  footer.site{ max-width:900px; margin:0 auto; padding:32px clamp(16px,4vw,32px) 60px; }
+  footer.site .foot-row{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    font-size:13px; color:var(--muted);
+  }
+  .theme-toggle{
+    background:none; border:1px solid var(--border); color:var(--muted);
+    border-radius:6px; padding:6px 12px; font-size:12.5px;
+  }
+
+  /* =========== TRACKER =========== */
+  .tracker-head{ padding:44px 0 8px; }
+  .tracker-head h2{ font-family:var(--serif); font-size:30px; font-weight:500; margin:0 0 10px; }
+  .note-box{
+    border-left:3px solid var(--accent);
+    background:var(--surface); padding:14px 18px; border-radius:0 8px 8px 0;
+    font-size:13.5px; color:var(--muted); line-height:1.65; margin:18px 0 28px;
+  }
+  .stats-row{ display:flex; gap:10px; flex-wrap:wrap; margin-bottom:24px; }
+  .stats-row .stat{
+    flex:1; min-width:100px; background:var(--surface); border:1px solid var(--border);
+    border-radius:8px; padding:12px 14px; border-right:1px solid var(--border);
+  }
+  .add-form{ display:grid; grid-template-columns:1.3fr 1.3fr 1fr; gap:10px; margin-bottom:28px; }
+  .add-form .full{ grid-column:1/-1; }
+  @media (max-width:620px){ .add-form{ grid-template-columns:1fr; } }
+  .add-form button{
+    background:var(--accent); color:#fff; border:none; border-radius:6px;
+    padding:10px 16px; font-weight:600; font-size:13.5px;
+  }
+  .add-form button:hover{ background:var(--ink); }
+
+  .board{ display:grid; grid-template-columns:repeat(5, minmax(180px,1fr)); gap:12px; padding-bottom:20px; }
+  @media (max-width:860px){ .board{ grid-template-columns:1fr; } }
+  .column{ background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:12px; min-height:80px; }
+  .column-head{ display:flex; align-items:center; justify-content:space-between; font-size:13px; font-weight:600; color:var(--ink); padding:2px 2px 12px; }
+  .column-head .count{ background:var(--surface-2); border-radius:10px; padding:1px 8px; font-size:11.5px; font-weight:500; color:var(--muted); }
+  .job-card{ background:var(--surface-2); border:1px solid var(--border); border-radius:8px; padding:11px; margin-bottom:9px; font-size:13px; }
+  .job-card .co{ font-weight:600; margin-bottom:2px; }
+  .job-card .role{ color:var(--muted); margin-bottom:8px; }
+  .job-card .row2{ display:flex; align-items:center; justify-content:space-between; gap:6px; }
+  .job-card select{ font-size:11.5px; padding:5px 6px; flex:1; }
+  .job-card .icon-btn{ background:none; border:none; color:var(--muted); font-size:14px; padding:2px 4px; }
+  .job-card .icon-btn:hover{ color:#B4483C; }
+  .job-card a.link{ font-size:11.5px; color:var(--accent); }
+  .job-card .notes{ color:var(--muted); font-size:12px; margin-top:6px; white-space:pre-wrap; }
+
+  /* ---------- Modal ---------- */
+  .overlay{ position:fixed; inset:0; background:rgba(20,26,23,0.45); display:none; align-items:flex-start; justify-content:center; padding:40px 16px; overflow-y:auto; z-index:10; }
+  .overlay.open{ display:flex; }
+  .modal{ background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; width:100%; max-width:560px; }
+  .modal h2{ font-family:var(--serif); font-weight:500; font-size:19px; margin:0 0 18px; }
+  .field{ margin-bottom:13px; display:flex; flex-direction:column; gap:5px; }
+  .field label{ font-size:12px; color:var(--muted); font-weight:500; }
+  .field input, .field textarea{ width:100%; }
+  .field .hint{ font-size:11.5px; color:var(--muted); }
+  .modal-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:18px; }
+  .btn-primary{ background:var(--accent); color:#fff; border:none; border-radius:6px; padding:9px 18px; font-weight:600; font-size:13.5px; }
+  .btn-primary:hover{ background:var(--ink); }
+  .btn-ghost{ background:none; border:1px solid var(--border); color:var(--ink); border-radius:6px; padding:9px 18px; font-size:13.5px; }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="header-inner">
+    <div class="brand-mark" id="brandMark">Karthikraj S</div>
+    <nav class="tabs">
+      <button class="active" data-panel="profile">Profile</button>
+      <button data-panel="tracker" id="trackerTabBtn" style="display:none;">Job Tracker</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- PROFILE PANEL -->
+  <section class="panel active" id="panel-profile">
+
+    <div class="hero">
+      <div class="hero-top">
+        <div class="eyebrow" id="heroRole">Data Engineer</div>
+        <button class="edit-link" id="editProfileBtn" style="display:none;">Edit profile</button>
+      </div>
+      <h1 id="heroName">Your Name</h1>
+      <p class="bio" id="heroBio"></p>
+      <div class="contact-row" id="contactRow"></div>
+      <div class="stat-strip" id="statStrip"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Experience</div>
+      <div class="timeline" id="projectsList"></div>
+      <button class="add-row" id="addProjectBtn" style="display:none;">+ Add role or project</button>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Skills</div>
+      <div class="skills-grid" id="skillsGrid"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Education &amp; Certifications</div>
+      <div class="edu-card">
+        <h3>Bachelor of Engineering — Computer Science</h3>
+        <div class="meta">University of Tamil Nadu · Graduated 2025 · CGPA 8.1, First Class</div>
+      </div>
+      <div class="cert-list">
+        <span class="cert-pill">AWS Academy Cloud Architecting — ICT Academy</span>
+        <span class="cert-pill">Data Analytics — Infosys Foundation</span>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Languages</div>
+      <div class="lang-row">
+        <span>Tamil</span>
+        <span>English</span>
+        <span>Hindi</span>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- TRACKER PANEL -->
+  <section class="panel" id="panel-tracker">
+    <div class="tracker-head">
+      <h2>Job Application Tracker</h2>
+    </div>
+
+    <div class="note-box">
+      This board is where you log openings and applications — it does not search or submit applications on its own. Most job platforms block automated form-fills, so the reliable workflow is: spot an opening, add it here in a few seconds, and let the board keep your pipeline visible.
+    </div>
+
+    <div class="stats-row" id="statsRow"></div>
+
+    <div class="add-form">
+      <input type="text" id="inCompany" placeholder="Company">
+      <input type="text" id="inRole" placeholder="Role / title">
+      <select id="inStatus">
+        <option value="saved">Saved</option>
+        <option value="applied">Applied</option>
+        <option value="interviewing">Interviewing</option>
+        <option value="offer">Offer</option>
+        <option value="rejected">Rejected</option>
+      </select>
+      <input type="text" id="inLink" placeholder="Posting URL (optional)" class="full">
+      <textarea id="inNotes" placeholder="Notes (optional)" class="full" rows="2"></textarea>
+      <button id="addJobBtn" class="full">+ Add job</button>
+    </div>
+
+    <div class="board" id="board"></div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="foot-row">
+    <span id="footNote">Saved privately in this browser.</span>
+    <span style="display:flex;gap:8px;align-items:center;">
+      <button class="theme-toggle" id="themeToggle">Theme: system</button>
+      <button class="theme-toggle" id="ownerToggle" title="Owner tools" aria-label="Toggle owner tools" style="padding:6px 9px;">⚙</button>
+    </span>
+  </div>
+</footer>
+
+<!-- Edit Profile Modal -->
+<div class="overlay" id="profileOverlay">
+  <div class="modal">
+    <h2>Edit profile</h2>
+    <div class="field"><label>Name</label><input id="mName" type="text"></div>
+    <div class="field"><label>Role / title</label><input id="mRole" type="text"></div>
+    <div class="field"><label>Bio</label><textarea id="mBio" rows="3"></textarea></div>
+    <div class="field"><label>Email</label><input id="mEmail" type="text"></div>
+    <div class="field"><label>Phone</label><input id="mPhone" type="text"></div>
+    <div class="field"><label>Location</label><input id="mLocation" type="text"></div>
+    <div class="field"><label>GitHub URL</label><input id="mGithub" type="text"></div>
+    <div class="field"><label>LinkedIn URL</label><input id="mLinkedin" type="text"></div>
+    <div class="field"><label>Resume link (optional)</label><input id="mResume" type="text"></div>
+    <div class="field">
+      <label>Skills — grouped, one group per line: "Group Name: skill, skill, skill"</label>
+      <textarea id="mSkillsRaw" rows="4"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancelProfile">Cancel</button>
+      <button class="btn-primary" id="saveProfile">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Project Modal -->
+<div class="overlay" id="projectOverlay">
+  <div class="modal">
+    <h2 id="projectModalTitle">Add role</h2>
+    <div class="field"><label>Title (role — company)</label><input id="pTitle" type="text"></div>
+    <div class="field"><label>Dates / location</label><input id="pMeta" type="text"></div>
+    <div class="field">
+      <label>Highlights — one per line</label>
+      <textarea id="pDesc" rows="4"></textarea>
+      <span class="hint">Each line becomes a bullet point.</span>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-ghost" id="cancelProject">Cancel</button>
+      <button class="btn-ghost" id="deleteProject" style="display:none;color:#B4483C;">Delete</button>
+      <button class="btn-primary" id="saveProject">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  function load(key, fallback){
+    try{ const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; }
+    catch(e){ return fallback; }
+  }
+  function save(key, val){ try{ localStorage.setItem(key, JSON.stringify(val)); }catch(e){} }
+  function esc(s){ const d=document.createElement("div"); d.textContent = s==null?"":s; return d.innerHTML; }
+
+  const defaultProfile = {
+    name: "Karthikraj S",
+    role: "Data Engineer",
+    location: "Dubai, UAE",
+    bio: "Detail-oriented data analyst with hands-on experience in data management, reporting, and dashboard development. Skilled in collecting, cleaning, and transforming data using Power BI, Power Query, and Excel, with a track record of building interactive dashboards that support data-driven decisions.",
+    email: "karthikraj17724@gmaill.com",
+    phone: "+971 562634311",
+    github: "",
+    linkedin: "",
+    resume: "",
+    skillGroups: [
+      { group: "Analytics & BI", skills: ["Power BI", "Power Query", "Excel", "Data Analytics"] },
+      { group: "Programming & Cloud", skills: ["Python", "AWS Cloud Architecting", "SQL"] },
+      { group: "Collaboration", skills: ["MS Office (Word, Excel, Outlook, PowerPoint)", "MS Teams", "Zoom", "Google Meet"] }
+    ]
+  };
+
+  const defaultProjects = [
+    { id:"p1", title:"Executive — Sobha Constructions LLC", meta:"Dubai · Oct 2025 – Present",
+      desc:"Collect, validate, and maintain daily business and operational data to ensure accuracy and consistency.\nDevelop interactive dashboards and reports using Microsoft Power BI to support data-driven decision-making.\nPerform data analysis to identify trends, monitor KPIs, and provide actionable insights to management.\nUse Power Query to clean, transform, merge, and automate data from multiple sources.\nPrepare regular reports using Excel, Word, and PowerPoint; collaborate across teams on business requirements." },
+    { id:"p2", title:"Data Science Intern — Renex.ai", meta:"Bangaluru · Jun 2024 – Jul 2024",
+      desc:"Worked as part of a team to develop a weather data classification system for determining humidity, using Python.\nAssisted in designing and implementing core functionality and logic for data classification.\nContributed to debugging and optimizing code to improve system performance and reliability." }
+  ];
+
+  let profile = load("portfolio_profile_v1", defaultProfile);
+  // migrate old flat "skills" array (from earlier version) into skillGroups if present
+  if(profile.skills && !profile.skillGroups){
+    profile.skillGroups = [{ group:"Skills", skills: profile.skills }];
+    delete profile.skills;
+  }
+  if(!profile.skillGroups) profile.skillGroups = defaultProfile.skillGroups;
+  if(profile.location === undefined) profile.location = defaultProfile.location;
+
+  let projects = load("portfolio_projects_v1", defaultProjects);
+  // migrate old single-paragraph desc (no newlines) — leave as-is, renders as one bullet
+  let jobs = load("portfolio_jobs_v1", []);
+  let ownerMode = load("portfolio_owner_mode_v1", false);
+
+  function applyOwnerMode(){
+    document.getElementById("editProfileBtn").style.display = ownerMode ? "inline-block" : "none";
+    document.getElementById("addProjectBtn").style.display = ownerMode ? "block" : "none";
+    document.getElementById("trackerTabBtn").style.display = ownerMode ? "inline-block" : "none";
+    if(!ownerMode){
+      // don't leave a viewer stranded on the tracker tab if owner mode gets turned off
+      tabs.forEach(t=>t.classList.remove("active"));
+      panels.forEach(p=>p.classList.remove("active"));
+      document.querySelector('nav.tabs button[data-panel="profile"]').classList.add("active");
+      document.getElementById("panel-profile").classList.add("active");
+    }
+  }
+
+  document.getElementById("ownerToggle").addEventListener("click", ()=>{
+    ownerMode = !ownerMode;
+    save("portfolio_owner_mode_v1", ownerMode);
+    applyOwnerMode();
+    renderProjects();
+  });
+
+  // ---------- Tabs ----------
+  const tabs = document.querySelectorAll("nav.tabs button");
+  const panels = document.querySelectorAll(".panel");
+  tabs.forEach(tab=>{
+    tab.addEventListener("click", ()=>{
+      tabs.forEach(t=>t.classList.remove("active"));
+      panels.forEach(p=>p.classList.remove("active"));
+      tab.classList.add("active");
+      document.getElementById("panel-"+tab.dataset.panel).classList.add("active");
+    });
+  });
+
+  // ---------- Theme ----------
+  const themeBtn = document.getElementById("themeToggle");
+  const themeOrder = ["system","dark","light"];
+  let themeState = load("portfolio_theme_v1", "system");
+  function applyTheme(){
+    if(themeState==="system"){ document.documentElement.removeAttribute("data-theme"); }
+    else{ document.documentElement.setAttribute("data-theme", themeState); }
+    themeBtn.textContent = "Theme: "+themeState;
+  }
+  themeBtn.addEventListener("click", ()=>{
+    const idx = themeOrder.indexOf(themeState);
+    themeState = themeOrder[(idx+1)%themeOrder.length];
+    save("portfolio_theme_v1", themeState);
+    applyTheme();
+  });
+  applyTheme();
+
+  // ---------- Render profile ----------
+  function renderProfile(){
+    document.getElementById("brandMark").textContent = profile.name || "Your Name";
+    document.getElementById("heroName").textContent = profile.name || "Your Name";
+    document.getElementById("heroRole").textContent = (profile.role||"") + (profile.location ? " · "+profile.location : "");
+    document.getElementById("heroBio").textContent = profile.bio || "";
+
+    const contact = document.getElementById("contactRow");
+    contact.innerHTML = "";
+    const items = [];
+    if(profile.email) items.push(["Email", "mailto:"+profile.email]);
+    if(profile.phone) items.push([profile.phone, "tel:"+profile.phone.replace(/\s+/g,"")]);
+    if(profile.github) items.push(["GitHub", profile.github]);
+    if(profile.linkedin) items.push(["LinkedIn", profile.linkedin]);
+    if(profile.resume) items.push(["Resume", profile.resume]);
+    if(items.length===0){
+      const hint = document.createElement("span");
+      hint.textContent = "Add contact links via Edit profile";
+      contact.appendChild(hint);
+    }
+    items.forEach(([label,url])=>{
+      const a = document.createElement("a");
+      a.href = url; a.textContent = label; a.target="_blank"; a.rel="noopener";
+      contact.appendChild(a);
+    });
+
+    // stat strip — derived from real content only
+    const strip = document.getElementById("statStrip");
+    strip.innerHTML = "";
+    const stats = [
+      { n: projects.length, l: "Roles & projects" },
+      { n: "8.1", l: "CGPA · First Class" },
+      { n: 2, l: "Certifications" },
+      { n: 3, l: "Languages" }
+    ];
+    stats.forEach(s=>{
+      const el = document.createElement("div");
+      el.className = "stat";
+      el.innerHTML = `<div class="n">${s.n}</div><div class="l">${s.l}</div>`;
+      strip.appendChild(el);
+    });
+
+    // skills
+    const grid = document.getElementById("skillsGrid");
+    grid.innerHTML = "";
+    (profile.skillGroups||[]).forEach(g=>{
+      const col = document.createElement("div");
+      col.className = "skill-group";
+      col.innerHTML = `<h4>${esc(g.group)}</h4><ul>${(g.skills||[]).map(s=>`<li>${esc(s)}</li>`).join("")}</ul>`;
+      grid.appendChild(col);
+    });
+  }
+
+  function renderProjects(){
+    const wrap = document.getElementById("projectsList");
+    wrap.innerHTML = "";
+    if(projects.length===0){
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.innerHTML = "<strong>No experience added yet.</strong> Use \"Add role or project\" below.";
+      wrap.appendChild(empty);
+      return;
+    }
+    projects.forEach(p=>{
+      const item = document.createElement("div");
+      item.className = "tl-item";
+      const bullets = (p.desc||"").split("\n").map(s=>s.trim()).filter(Boolean);
+      item.innerHTML = `
+        <h3>${esc(p.title)}</h3>
+        <div class="meta">${esc(p.meta)}</div>
+        <ul>${bullets.map(b=>`<li>${esc(b)}</li>`).join("")}</ul>
+        ${ownerMode ? '<div class="card-actions"><button class="editBtn">Edit</button></div>' : ""}
+      `;
+      if(ownerMode){
+        item.querySelector(".editBtn").addEventListener("click", ()=> openProjectModal(p.id));
+      }
+      wrap.appendChild(item);
+    });
+  }
+
+  // ---------- Profile modal ----------
+  const profileOverlay = document.getElementById("profileOverlay");
+  function groupsToRaw(groups){
+    return (groups||[]).map(g => g.group + ": " + (g.skills||[]).join(", ")).join("\n");
+  }
+  function rawToGroups(raw){
+    return raw.split("\n").map(line=>line.trim()).filter(Boolean).map(line=>{
+      const idx = line.indexOf(":");
+      if(idx===-1) return { group:"Skills", skills:[line.trim()] };
+      const group = line.slice(0,idx).trim();
+      const skills = line.slice(idx+1).split(",").map(s=>s.trim()).filter(Boolean);
+      return { group, skills };
+    }).filter(g=>g.group && g.skills.length);
+  }
+
+  document.getElementById("editProfileBtn").addEventListener("click", ()=>{
+    document.getElementById("mName").value = profile.name || "";
+    document.getElementById("mRole").value = profile.role || "";
+    document.getElementById("mBio").value = profile.bio || "";
+    document.getElementById("mEmail").value = profile.email || "";
+    document.getElementById("mPhone").value = profile.phone || "";
+    document.getElementById("mLocation").value = profile.location || "";
+    document.getElementById("mGithub").value = profile.github || "";
+    document.getElementById("mLinkedin").value = profile.linkedin || "";
+    document.getElementById("mResume").value = profile.resume || "";
+    document.getElementById("mSkillsRaw").value = groupsToRaw(profile.skillGroups);
+    profileOverlay.classList.add("open");
+  });
+  document.getElementById("cancelProfile").addEventListener("click", ()=> profileOverlay.classList.remove("open"));
+  document.getElementById("saveProfile").addEventListener("click", ()=>{
+    profile = {
+      name: document.getElementById("mName").value.trim() || "Your Name",
+      role: document.getElementById("mRole").value.trim(),
+      location: document.getElementById("mLocation").value.trim(),
+      bio: document.getElementById("mBio").value.trim(),
+      email: document.getElementById("mEmail").value.trim(),
+      phone: document.getElementById("mPhone").value.trim(),
+      github: document.getElementById("mGithub").value.trim(),
+      linkedin: document.getElementById("mLinkedin").value.trim(),
+      resume: document.getElementById("mResume").value.trim(),
+      skillGroups: rawToGroups(document.getElementById("mSkillsRaw").value)
+    };
+    save("portfolio_profile_v1", profile);
+    renderProfile();
+    profileOverlay.classList.remove("open");
+  });
+
+  // ---------- Project modal ----------
+  const projectOverlay = document.getElementById("projectOverlay");
+  let editingProjectId = null;
+  function openProjectModal(id){
+    editingProjectId = id;
+    const del = document.getElementById("deleteProject");
+    if(id){
+      const p = projects.find(x=>x.id===id);
+      document.getElementById("projectModalTitle").textContent = "Edit role";
+      document.getElementById("pTitle").value = p.title;
+      document.getElementById("pMeta").value = p.meta;
+      document.getElementById("pDesc").value = p.desc;
+      del.style.display = "inline-block";
+    }else{
+      document.getElementById("projectModalTitle").textContent = "Add role";
+      document.getElementById("pTitle").value = "";
+      document.getElementById("pMeta").value = "";
+      document.getElementById("pDesc").value = "";
+      del.style.display = "none";
+    }
+    projectOverlay.classList.add("open");
+  }
+  document.getElementById("addProjectBtn").addEventListener("click", ()=> openProjectModal(null));
+  document.getElementById("cancelProject").addEventListener("click", ()=> projectOverlay.classList.remove("open"));
+  document.getElementById("deleteProject").addEventListener("click", ()=>{
+    projects = projects.filter(p=>p.id!==editingProjectId);
+    save("portfolio_projects_v1", projects);
+    renderProfile(); renderProjects();
+    projectOverlay.classList.remove("open");
+  });
+  document.getElementById("saveProject").addEventListener("click", ()=>{
+    const title = document.getElementById("pTitle").value.trim();
+    if(!title) return;
+    const data = {
+      title,
+      meta: document.getElementById("pMeta").value.trim(),
+      desc: document.getElementById("pDesc").value.trim()
+    };
+    if(editingProjectId){
+      Object.assign(projects.find(x=>x.id===editingProjectId), data);
+    }else{
+      data.id = "p"+Date.now();
+      projects.push(data);
+    }
+    save("portfolio_projects_v1", projects);
+    renderProfile(); renderProjects();
+    projectOverlay.classList.remove("open");
+  });
+
+  // ---------- Job tracker ----------
+  const STATUSES = [
+    { key:"saved", label:"Saved" },
+    { key:"applied", label:"Applied" },
+    { key:"interviewing", label:"Interviewing" },
+    { key:"offer", label:"Offer" },
+    { key:"rejected", label:"Rejected" }
+  ];
+
+  function renderStats(){
+    const wrap = document.getElementById("statsRow");
+    wrap.innerHTML = "";
+    STATUSES.forEach(s=>{
+      const n = jobs.filter(j=>j.status===s.key).length;
+      const el = document.createElement("div");
+      el.className = "stat";
+      el.innerHTML = `<div class="n">${n}</div><div class="l">${s.label}</div>`;
+      wrap.appendChild(el);
+    });
+  }
+
+  function renderBoard(){
+    const board = document.getElementById("board");
+    board.innerHTML = "";
+    STATUSES.forEach(s=>{
+      const col = document.createElement("div");
+      col.className = "column";
+      const list = jobs.filter(j=>j.status===s.key).sort((a,b)=>b.created-a.created);
+      col.innerHTML = `<div class="column-head"><span>${s.label}</span><span class="count">${list.length}</span></div>`;
+      if(list.length===0){
+        const e = document.createElement("div");
+        e.className = "empty"; e.style.fontSize="12px"; e.style.padding="12px";
+        e.textContent = "Nothing here";
+        col.appendChild(e);
+      }
+      list.forEach(j=>{
+        const card = document.createElement("div");
+        card.className = "job-card";
+        card.innerHTML = `
+          <div class="co">${esc(j.company)}</div>
+          <div class="role">${esc(j.role)}</div>
+          ${j.link ? `<a class="link" href="${esc(j.link)}" target="_blank" rel="noopener">Posting →</a>` : ""}
+          ${j.notes ? `<div class="notes">${esc(j.notes)}</div>` : ""}
+          <div class="row2" style="margin-top:8px;">
+            <select data-id="${j.id}" class="statusSelect">
+              ${STATUSES.map(st=>`<option value="${st.key}" ${st.key===j.status?"selected":""}>${st.label}</option>`).join("")}
+            </select>
+            <button class="icon-btn" data-id="${j.id}" title="Delete">✕</button>
+          </div>
+        `;
+        col.appendChild(card);
+      });
+      board.appendChild(col);
+    });
+
+    board.querySelectorAll(".statusSelect").forEach(sel=>{
+      sel.addEventListener("change", ()=>{
+        jobs.find(j=>j.id===sel.dataset.id).status = sel.value;
+        save("portfolio_jobs_v1", jobs);
+        renderStats(); renderBoard();
+      });
+    });
+    board.querySelectorAll(".icon-btn").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        jobs = jobs.filter(j=>j.id!==btn.dataset.id);
+        save("portfolio_jobs_v1", jobs);
+        renderStats(); renderBoard();
+      });
+    });
+  }
+
+  document.getElementById("addJobBtn").addEventListener("click", ()=>{
+    const company = document.getElementById("inCompany").value.trim();
+    const role = document.getElementById("inRole").value.trim();
+    if(!company || !role) return;
+    jobs.push({
+      id:"j"+Date.now(), company, role,
+      status: document.getElementById("inStatus").value,
+      link: document.getElementById("inLink").value.trim(),
+      notes: document.getElementById("inNotes").value.trim(),
+      created: Date.now()
+    });
+    save("portfolio_jobs_v1", jobs);
+    document.getElementById("inCompany").value = "";
+    document.getElementById("inRole").value = "";
+    document.getElementById("inLink").value = "";
+    document.getElementById("inNotes").value = "";
+    document.getElementById("inStatus").value = "saved";
+    renderStats(); renderBoard();
+  });
+
+  [profileOverlay, projectOverlay].forEach(ov=>{
+    ov.addEventListener("click", (e)=>{ if(e.target===ov) ov.classList.remove("open"); });
+  });
+
+  // ---------- Init ----------
+  applyOwnerMode();
+  renderProfile();
+  renderProjects();
+  renderStats();
+  renderBoard();
+})();
+</script>
+</body>
+</html>
